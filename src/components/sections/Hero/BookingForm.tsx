@@ -1,10 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import DatePicker from "react-datepicker";
-import { FaCalendarAlt, FaChevronDown, FaUser, FaPhone } from "react-icons/fa";
-import "react-datepicker/dist/react-datepicker.css";
+import { FaCalendarAlt, FaUser, FaPhone } from "react-icons/fa";
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { PLAN_TYPES } from "./constants/plan";
+import dayjs from 'dayjs';
 
 type PlanType = (typeof PLAN_TYPES)[number];
 
@@ -13,14 +15,13 @@ export const BookingForm = () => {
     name: "",
     phone: "",
     persons: "2",
-    preferableDate: null as Date | null,
+    preferableDate: null as dayjs.Dayjs | null,
     plan: "Day Trek" as PlanType,
   });
 
   const inputGroupClass = "relative flex items-center";
   const inputClass =
     "w-full px-3 py-2.5 pl-9 bg-gray-50 rounded-md text-sm outline-none border border-gray-200 focus:border-primary transition-colors placeholder:text-gray-400";
-  const iconClass = "absolute left-3 text-gray-400";
   const selectClass =
     "w-full px-3 py-2.5 pl-9 pr-8 bg-gray-50 rounded-md text-sm appearance-none outline-none border border-gray-200 focus:border-primary transition-colors";
 
@@ -35,7 +36,7 @@ export const BookingForm = () => {
         {/* Name & Phone */}
         <div className="grid grid-cols-2 gap-3">
           <div className={inputGroupClass}>
-            <FaUser size={14} className={iconClass} />
+            <FaUser size={14} className="absolute left-3 text-gray-400" />
             <input
               type="text"
               value={formData.name}
@@ -47,7 +48,7 @@ export const BookingForm = () => {
             />
           </div>
           <div className={inputGroupClass}>
-            <FaPhone size={14} className={iconClass} />
+            <FaPhone size={14} className="absolute left-3 text-gray-400" />
             <input
               type="tel"
               value={formData.phone}
@@ -64,7 +65,7 @@ export const BookingForm = () => {
         <div className="grid grid-cols-2 gap-3">
           <div className={inputGroupClass}>
             <svg
-              className={iconClass}
+              className="absolute left-3 text-gray-400"
               width="14"
               height="14"
               viewBox="0 0 24 24"
@@ -90,27 +91,9 @@ export const BookingForm = () => {
                 </option>
               ))}
             </select>
-            <FaChevronDown
-              className="absolute right-3 text-gray-400 pointer-events-none"
-              size={12}
-            />
           </div>
 
           <div className={inputGroupClass}>
-            <svg
-              className={iconClass}
-              width="14"
-              height="14"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-            >
-              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-              <circle cx="9" cy="7" r="4" />
-              <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-              <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-            </svg>
             <select
               value={formData.persons}
               onChange={(e) =>
@@ -124,34 +107,81 @@ export const BookingForm = () => {
                 </option>
               ))}
             </select>
-            <FaChevronDown
-              className="absolute right-3 text-gray-400 pointer-events-none"
-              size={12}
-            />
           </div>
         </div>
 
-        {/* Prominent Date Picker */}
+        {/* Date Picker */}
         <div className="relative">
           <label className="block text-sm font-medium text-gray-700 mb-1">
             Preferable Date
           </label>
-          <div className="flex items-center border border-gray-200 rounded-md p-2 bg-gray-50 focus-within:border-primary transition-colors">
-            <FaCalendarAlt size={16} className="text-gray-400 mr-2" />
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DatePicker
-              selected={formData.preferableDate}
+              value={formData.preferableDate}
               onChange={(date) =>
                 setFormData((prev) => ({
                   ...prev,
-                  preferableDate: date as Date,
+                  preferableDate: date,
                 }))
               }
-              placeholderText="Select preferred date"
-              dateFormat="dd/MM/yyyy"
-              minDate={new Date()}
-              className="w-full bg-transparent outline-none text-sm placeholder:text-gray-400"
+              minDate={dayjs()}
+              slotProps={{
+                textField: {
+                  variant: "outlined",
+                  fullWidth: true,
+                  InputProps: {
+                    startAdornment: (
+                      <FaCalendarAlt className="text-gray-400 mr-2" size={16} />
+                    ),
+                  },
+                  sx: {
+                    '& .MuiOutlinedInput-root': {
+                      backgroundColor: 'rgb(249 250 251)',
+                      fontSize: '0.875rem',
+                      '& fieldset': {
+                        borderColor: 'rgb(229 231 235)',
+                      },
+                      '&:hover fieldset': {
+                        borderColor: '#389844',
+                      },
+                      '&.Mui-focused fieldset': {
+                        borderColor: '#389844',
+                      },
+                    },
+                    '& .MuiInputBase-input': {
+                      padding: '10px 14px',
+                      paddingLeft: '8px',
+                    },
+                  },
+                },
+                popper: {
+                  sx: {
+                    '& .MuiPaper-root': {
+                      borderRadius: '8px',
+                      boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)',
+                    },
+                    '& .MuiPickersDay-root': {
+                      borderRadius: '8px',
+                      '&.Mui-selected': {
+                        backgroundColor: '#389844',
+                        '&:hover': {
+                          backgroundColor: '#389844',
+                        },
+                      },
+                    },
+                    '& .MuiDayCalendar-weekDayLabel': {
+                      color: '#389844',
+                    },
+                    '& .MuiPickersCalendarHeader-root': {
+                      '& .MuiIconButton-root': {
+                        color: '#389844',
+                      },
+                    },
+                  },
+                },
+              }}
             />
-          </div>
+          </LocalizationProvider>
         </div>
 
         {/* Submit Button */}
