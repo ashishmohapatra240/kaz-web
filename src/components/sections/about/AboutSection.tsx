@@ -34,8 +34,8 @@ export default function AboutSection() {
 
               <div className="flex justify-center lg:justify-start">
                 <Button
-                  variant="outline"
-                  className="border-secondary text-secondary hover:bg-secondary/10 px-8 py-4 whitespace-nowrap"
+                  variant="solid"
+                  className="bg-white text-gray-900 hover:bg-white/90 px-6 py-3 whitespace-nowrap"
                 >
                   Learn More
                 </Button>
