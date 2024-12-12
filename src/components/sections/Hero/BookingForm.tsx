@@ -4,7 +4,7 @@ import { useState } from "react";
 import DatePicker from "react-datepicker";
 import { FaCalendarAlt, FaChevronDown, FaUser, FaPhone } from "react-icons/fa";
 import "react-datepicker/dist/react-datepicker.css";
-import { PLAN_TYPES } from "@/src/constants/plan";
+import { PLAN_TYPES } from "./constants/plan";
 
 type PlanType = (typeof PLAN_TYPES)[number];
 
