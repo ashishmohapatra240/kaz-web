@@ -18,7 +18,7 @@ export const Navbar = () => {
           <Link href="/" className="relative w-24 sm:w-32 h-16 sm:h-20">
             <Image
               src="/logo.png"
-              alt="Ranger Logo"
+              alt="Koraput Logo"
               fill
               className="object-contain"
               priority
