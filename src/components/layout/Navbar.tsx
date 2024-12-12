@@ -34,9 +34,6 @@ export const Navbar = () => {
                 className="text-white hover:text-primary font-bold text-sm xl:text-[15px] uppercase tracking-wider transition-colors"
               >
                 {link.label}
-                {link.hasSubmenu && (
-                  <span className="ml-1 inline-block">▼</span>
-                )}
               </Link>
             ))}
           </div>
@@ -44,13 +41,12 @@ export const Navbar = () => {
           {/* Contact and Book Now - Desktop */}
           <div className="hidden lg:flex items-center gap-4 xl:gap-8">
             <div className="flex items-center gap-2 text-primary">
-              <span className="font-bold text-sm xl:text-[15px]">021 3456 789</span>
+              <span className="font-bold text-sm xl:text-[15px]">
+                021 3456 789
+              </span>
               <span>📞</span>
             </div>
-            <Button 
-              variant="outline" 
-              className="text-sm xl:text-[15px]"
-            >
+            <Button variant="outline" className="text-sm xl:text-[15px]">
               Book Now →
             </Button>
           </div>
@@ -61,7 +57,7 @@ export const Navbar = () => {
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             aria-label="Toggle menu"
           >
-            {isMenuOpen ? '✕' : '☰'}
+            {isMenuOpen ? "✕" : "☰"}
           </button>
         </div>
       </div>
