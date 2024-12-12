@@ -12,7 +12,7 @@ export default function AboutSection() {
         <div className="relative h-full flex items-center py-16 lg:py-0">
           <div className="w-full max-w-[600px] mx-auto lg:mx-0 px-6 sm:px-8 lg:pl-[160px] lg:pr-16 flex flex-col gap-8">
             <SectionTitle
-              title="About Ranger"
+              title="About Koraput"
               subtitle="about"
               className="text-white text-center lg:text-left"
               decorationColor="secondary"
@@ -51,7 +51,7 @@ export default function AboutSection() {
           <div className="w-full max-w-[600px] mx-auto lg:mx-0 px-6 sm:px-8 lg:pl-16 lg:pr-8 flex flex-col gap-8">
             <div className="space-y-4">
               <SectionTitle
-                title="Ranger State Park in Stats"
+                title="Koraput State Park in Stats"
                 subtitle="stats"
                 className="text-white text-center lg:text-left"
                 decorationColor="secondary"
