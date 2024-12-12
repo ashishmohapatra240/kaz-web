@@ -28,7 +28,7 @@ export const Hero = () => {
             <div className="flex items-center justify-center lg:justify-start gap-2.5 mb-4 lg:mb-2">
               <div className="w-[27px] h-[5px] border-[3px] border-primary" />
               <span className="text-primary text-sm sm:text-[15px] font-bold tracking-[2px] uppercase">
-                ranger camp
+                Koraput camp
               </span>
               <div className="w-[27px] h-[5px] border-[3px] border-primary" />
             </div>
