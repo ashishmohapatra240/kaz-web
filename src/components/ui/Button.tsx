@@ -14,7 +14,7 @@ export const Button = ({
   const baseStyles =
     "flex items-center gap-2 px-8 py-4 rounded font-bold text-sm uppercase transition-colors";
   const variants = {
-    solid: "bg-primary text-dark",
+    solid: "bg-[#389844]/90 text-white",
     outline: "border border-primary text-primary hover:bg-primary/10",
   };
 
