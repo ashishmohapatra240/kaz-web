@@ -4,4 +4,7 @@ export interface Place {
   description: string;
   image: string;
   rating: number;
+  price: number;
+  duration: string;
+  features: string[];
 } 
