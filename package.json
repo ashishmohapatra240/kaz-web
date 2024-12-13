@@ -15,6 +15,7 @@
     "@mui/x-date-pickers": "^7.23.2",
     "@types/react-datepicker": "^6.2.0",
     "dayjs": "^1.11.13",
+    "lightgallery": "^2.8.2",
     "next": "15.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
