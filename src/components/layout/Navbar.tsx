@@ -15,12 +15,12 @@ export const Navbar = () => {
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
-          <Link href="/" className="relative w-24 sm:w-32 h-16 sm:h-20">
+          <Link href="/" className="relative w-24 sm:w-32 h-14 sm:h-14">
             <Image
-              src="/logo.png"
+              src="/images/logo.png"
               alt="Koraput Logo"
               fill
-              className="object-contain"
+              className="object-contain brightness-0 invert"
               priority
             />
           </Link>
