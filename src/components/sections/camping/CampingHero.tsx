@@ -25,12 +25,14 @@ export default function CampingHero() {
           </span>
 
           <h1 className="text-white font-montserrat font-semibold text-3xl sm:text-4xl leading-tight">
-            Your Best Camping Ground
+            Our Promise to You
           </h1>
 
           <p className="text-gray-200 font-inter text-base leading-relaxed">
-            Nullam semper etiam congue lacinia nunc, sit. Quam vel vestibulum
-            faucibus dolor non semper leo quis. Pretium quam lacus.
+            We craft meaningful adventures. From trek prep and gear selection to
+            exploring local culture responsibly, we’re here to help you discover
+            new places and enjoy nature. Whether you’re a newbie or a seasoned
+            trekker, join us to explore trails and create lasting memories.
           </p>
         </div>
 
@@ -38,7 +40,7 @@ export default function CampingHero() {
         <div className="mt-4 sm:mt-0">
           <Button
             variant="solid"
-            className="bg-white text-gray-900 hover:bg-white/90 px-6 py-3 whitespace-nowrap"
+            className="bg-[#CA6702] text-white hover:bg-[#CA6702]/90 px-6 py-3 whitespace-nowrap"
           >
             Learn More
           </Button>
