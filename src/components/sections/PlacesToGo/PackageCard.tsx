@@ -9,9 +9,9 @@ interface PlaceCardProps {
 
 export const PlaceCard = ({ place }: PlaceCardProps) => {
   return (
-    <div className="w-full max-w-[330px] mx-auto rounded-xl overflow-hidden flex flex-col bg-white shadow-lg hover:shadow-xl transition-all duration-300 group">
+    <div className="w-full max-w-[330px] h-full mx-auto rounded-xl overflow-hidden flex flex-col bg-white shadow-lg hover:shadow-xl transition-all duration-300 group">
       {/* Image Container */}
-      <div className="relative h-[220px] w-full overflow-hidden">
+      <div className="relative h-[220px] w-full overflow-hidden flex-shrink-0">
         <Image
           src={place.image}
           alt={place.title}
@@ -45,31 +45,33 @@ export const PlaceCard = ({ place }: PlaceCardProps) => {
       </div>
 
       {/* Content Container */}
-      <div className="flex flex-col p-6">
-        {/* Title */}
-        <h3 className="text-xl font-semibold font-montserrat text-[#333] mb-3 group-hover:text-[#CA6702] transition-colors">
-          {place.title}
-        </h3>
+      <div className="flex flex-col flex-grow p-6">
+        <div className="flex-grow">
+          {/* Title */}
+          <h3 className="text-xl font-semibold font-montserrat text-[#333] mb-3 group-hover:text-[#CA6702] transition-colors">
+            {place.title}
+          </h3>
 
-        {/* Description */}
-        <p className="text-[15px] text-gray-600 font-inter leading-[22px] mb-4">
-          {place.description}
-        </p>
+          {/* Description */}
+          <p className="text-[15px] text-gray-600 font-inter leading-[22px] mb-4">
+            {place.description}
+          </p>
 
-        {/* Features */}
-        <div className="space-y-2 mb-6">
-          {place.features.map((feature, index) => (
-            <div key={index} className="flex items-center gap-2">
-              <div className="w-5 h-5 rounded-full bg-green-100 flex items-center justify-center">
-                <FaCheck className="w-3 h-3 text-green-600" />
+          {/* Features */}
+          <div className="space-y-2 mb-6">
+            {place.features.map((feature, index) => (
+              <div key={index} className="flex items-center gap-2">
+                <div className="w-5 h-5 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0">
+                  <FaCheck className="w-3 h-3 text-green-600" />
+                </div>
+                <span className="text-sm text-gray-600">{feature}</span>
               </div>
-              <span className="text-sm text-gray-600">{feature}</span>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
 
         {/* Price and Button */}
-        <div className="flex items-center justify-between mt-auto pt-4 border-t border-gray-100">
+        <div className="flex items-center justify-between pt-4 border-t border-gray-100 mt-auto">
           <div className="flex flex-col">
             <span className="text-sm text-gray-500">Starting from</span>
             <div className="flex items-baseline gap-1">
