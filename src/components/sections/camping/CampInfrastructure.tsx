@@ -1,5 +1,5 @@
-import { infrastructureData } from "./constants/infrastructure-data";
-import InfrastructureCard from "./InfrastructureCard";
+// import { infrastructureData } from "./constants/infrastructure-data";
+// import InfrastructureCard from "./InfrastructureCard";
 import CampingHero from "./CampingHero";
 
 export default function CampInfrastructure() {
@@ -12,7 +12,7 @@ export default function CampInfrastructure() {
         </div>
 
         {/* Section Title */}
-        <div className="flex flex-col items-center gap-6 sm:gap-8 mb-12 sm:mb-16">
+        {/* <div className="flex flex-col items-center gap-6 sm:gap-8 mb-12 sm:mb-16">
           <div className="flex items-center gap-2.5">
             <div className="w-7 h-[2px] border-[3px] border-[#CA6702]"></div>
             <span className="text-[#CA6702] font-opensans font-bold text-sm tracking-[2px] uppercase">
@@ -29,14 +29,14 @@ export default function CampInfrastructure() {
             Nullam semper etiam congue lacinia nuncesit quam vel vestibulum
             faucibus dolor non semper leo quis pretium quam lacus.
           </p>
-        </div>
+        </div> */}
 
         {/* Infrastructure Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 max-w-[1200px] mx-auto">
+        {/* <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 max-w-[1200px] mx-auto">
           {infrastructureData.map((item, index) => (
             <InfrastructureCard key={index} {...item} />
           ))}
-        </div>
+        </div> */}
       </div>
     </section>
   );
