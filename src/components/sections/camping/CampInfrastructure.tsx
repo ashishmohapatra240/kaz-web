@@ -14,11 +14,11 @@ export default function CampInfrastructure() {
         {/* Section Title */}
         <div className="flex flex-col items-center gap-6 sm:gap-8 mb-12 sm:mb-16">
           <div className="flex items-center gap-2.5">
-            <div className="w-7 h-[2px] border-[3px] border-primary"></div>
-            <span className="text-primary font-opensans font-bold text-sm tracking-[2px] uppercase">
+            <div className="w-7 h-[2px] border-[3px] border-[#CA6702]"></div>
+            <span className="text-[#CA6702] font-opensans font-bold text-sm tracking-[2px] uppercase">
               featured
             </span>
-            <div className="w-7 h-[2px] border-[3px] border-primary"></div>
+            <div className="w-7 h-[2px] border-[3px] border-[#CA6702]"></div>
           </div>
 
           <h2 className="text-dark font-montserrat font-semibold text-3xl sm:text-4xl text-center">
