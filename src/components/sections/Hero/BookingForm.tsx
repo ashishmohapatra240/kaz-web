@@ -16,7 +16,7 @@ export const BookingForm = () => {
     phone: "",
     persons: "2",
     preferableDate: null as dayjs.Dayjs | null,
-    plan: "Day Trek" as PlanType,
+    plan: "Meyamali peak camp & Trek" as PlanType,
   });
 
   const inputGroupClass = "relative flex items-center";
