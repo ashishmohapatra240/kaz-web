@@ -1,7 +1,12 @@
+"use client";
+import { useState } from "react";
 import { PlaceCard } from "./PackageCard";
-import { PACKAGES } from "./constants/package";
+import { TREK_PACKAGES, CAMPING_PACKAGES, GUIDED_TOUR_PACKAGES } from "./constants/package";
+import { GuidedTourCard } from "./GuidedTourCard";
 
 export const Packages = () => {
+  const [activeTab, setActiveTab] = useState<"trek" | "camping" | "guided">("trek");
+
   return (
     <section className="container mx-auto px-4 py-16 bg-gray-50">
       {/* Header */}
@@ -25,10 +30,52 @@ export const Packages = () => {
         </p>
       </div>
 
+      {/* Tab Bar */}
+      <div className="flex justify-center mb-12">
+        <div className="inline-flex rounded-lg border border-[#CA6702] p-1">
+          <button
+            onClick={() => setActiveTab("trek")}
+            className={`px-6 py-2 rounded-md text-sm font-medium transition-colors ${
+              activeTab === "trek"
+                ? "bg-[#CA6702] text-white"
+                : "text-[#CA6702] hover:bg-[#CA6702]/10"
+            }`}
+          >
+            Trek Packages
+          </button>
+          <button
+            onClick={() => setActiveTab("camping")}
+            className={`px-6 py-2 rounded-md text-sm font-medium transition-colors ${
+              activeTab === "camping"
+                ? "bg-[#CA6702] text-white"
+                : "text-[#CA6702] hover:bg-[#CA6702]/10"
+            }`}
+          >
+            Camping Packages
+          </button>
+          <button
+            onClick={() => setActiveTab("guided")}
+            className={`px-6 py-2 rounded-md text-sm font-medium transition-colors ${
+              activeTab === "guided"
+                ? "bg-[#CA6702] text-white"
+                : "text-[#CA6702] hover:bg-[#CA6702]/10"
+            }`}
+          >
+            Guided Tours
+          </button>
+        </div>
+      </div>
+
       {/* Grid of Packages */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-[1150px] mx-auto">
-        {PACKAGES.map((packages) => (
-          <PlaceCard key={packages.id} place={packages} />
+      <div className={`grid ${activeTab === "guided" ? "" : "grid-cols-1 md:grid-cols-2 lg:grid-cols-3"} gap-8 max-w-[1150px] mx-auto`}>
+        {activeTab === "trek" && TREK_PACKAGES.map((package_) => (
+          <PlaceCard key={package_.id} place={package_} />
+        ))}
+        {activeTab === "camping" && CAMPING_PACKAGES.map((package_) => (
+          <PlaceCard key={package_.id} place={package_} />
+        ))}
+        {activeTab === "guided" && GUIDED_TOUR_PACKAGES.map((package_) => (
+          <GuidedTourCard key={package_.id} place={package_} />
         ))}
       </div>
     </section>
