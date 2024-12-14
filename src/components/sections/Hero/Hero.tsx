@@ -28,7 +28,7 @@ export const Hero = () => {
             <div className="flex items-center justify-center lg:justify-start gap-2.5 mb-4 lg:mb-2">
               <div className="w-[30px] h-[5px] border-[3px] border-primary" />
               <span className="text-primary text-sm sm:text-[20px] font-bold tracking-[2px] uppercase">
-                Koraput camp
+                Koraput Adventure Zone
               </span>
               <div className="w-[27px] h-[5px] border-[3px] border-primary" />
             </div>
@@ -40,9 +40,7 @@ export const Hero = () => {
 
             {/* Description */}
             <p className="text-sm sm:text-[16px] text-white leading-relaxed lg:leading-[22px] mb-6 lg:mb-4 max-w-[594px] text-center lg:text-left">
-              Nullam semper etiam congue lacinia nuncsit quam vel vestibulum
-              faucibus dolor non semper leo quis retium quam lacus interdum
-              ultrices velit elementum.
+            At Koraput Adventure Zone, we craft outdoor adventures that blend comfort with excitement, helping everyone connect with nature and create lasting memories.
             </p>
 
             {/* Learn More Button
