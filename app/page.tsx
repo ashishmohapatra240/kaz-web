@@ -8,12 +8,24 @@ import { Testimonials } from "@/src/components/sections/Testimonials/Testimonial
 export default function Home() {
   return (
     <main>
-      <Hero />
-      <Packages />
-      <AboutSection />
-      <PhotoGallery />
-      <CampInfrastructure />
-      <Testimonials />
+      <section id="home">
+        <Hero />
+      </section>
+      <section id="packages">
+        <Packages />
+      </section>
+      <section id="about">
+        <AboutSection />
+      </section>
+      <section id="gallery">
+        <PhotoGallery />
+      </section>
+      <section id="camping">
+        <CampInfrastructure />
+      </section>
+      <section id="testimonials">
+        <Testimonials />
+      </section>
     </main>
   );
 }
