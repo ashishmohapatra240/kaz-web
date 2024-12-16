@@ -11,7 +11,7 @@ export const Hero = () => {
       <div className="absolute inset-0">
         <video
           className="w-full h-full object-cover"
-          src="/videos/Hero.mp4"
+          src="/videos/DJI_0746.mp4"
           autoPlay
           loop
           muted
