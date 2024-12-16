@@ -44,7 +44,7 @@ const footerSections: FooterSectionType[] = [
 
 export const Footer = () => {
   return (
-    <footer className="bg-[#1F221D] py-12 md:py-16">
+    <footer className="bg-dark py-12 md:py-16">
       <div className="container mx-auto px-6">
         <div className="flex flex-col lg:flex-row items-center lg:items-start justify-between mb-10 lg:mb-14">
           {/* Logo and Social Section */}
