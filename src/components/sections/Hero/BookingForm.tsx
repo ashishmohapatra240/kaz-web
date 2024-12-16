@@ -8,6 +8,7 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { PLAN_TYPES } from "./constants/plan";
 import dayjs from "dayjs";
 import { z } from "zod";
+import toast from "react-hot-toast";
 
 const bookingSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -82,47 +83,56 @@ export const BookingForm = () => {
 
     setIsSubmitting(true);
 
-    try {
-      const response = await fetch("/api/bookings", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+    const bookingPromise = fetch("/api/bookings", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        ...formData,
+        preferableDate: formData.preferableDate?.toISOString(),
+      }),
+    });
+
+    toast
+      .promise(
+        bookingPromise,
+        {
+          loading: "Booking your adventure...",
+          success: (response: Response) => {
+            if (!response.ok) throw new Error();
+
+            // Reset form and errors
+            setFormData({
+              name: "",
+              phone: "",
+              persons: "2",
+              preferableDate: null,
+              plan: "Meyamali peak camp & Trek",
+            });
+            setErrors({});
+
+            return "Booking successful! Get ready for your adventure!";
+          },
+          error: "Something went wrong. Please try again.",
         },
-        body: JSON.stringify({
-          ...formData,
-          preferableDate: formData.preferableDate?.toISOString(),
-        }),
-      });
-
-      if (!response.ok) {
-        const data = await response.json();
-        if (response.status === 400) {
-          const newErrors: Record<string, string> = {};
-          data.errors.forEach((err: { field: string; message: string }) => {
-            newErrors[err.field] = err.message;
-          });
-          setErrors(newErrors);
-          return;
+        {
+          style: {
+            minWidth: "250px",
+          },
+          success: {
+            duration: 5000,
+            icon: "🎉",
+          },
+          error: {
+            duration: 4000,
+            icon: "😔",
+          },
         }
-        throw new Error("Failed to submit booking");
-      }
-
-      // Reset form and errors
-      setFormData({
-        name: "",
-        phone: "",
-        persons: "2",
-        preferableDate: null,
-        plan: "Meyamali peak camp & Trek",
+      )
+      .finally(() => {
+        setIsSubmitting(false);
       });
-      setErrors({});
-      alert("Booking submitted successfully!");
-    } catch (error) {
-      console.error("Error submitting booking:", error);
-      alert("Failed to submit booking. Please try again.");
-    } finally {
-      setIsSubmitting(false);
-    }
   };
 
   return (
