@@ -37,3 +37,8 @@
   background-color: #389844 !important;
   color: white !important;
 }
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 80px; /* This accounts for the fixed navbar height */
+}
