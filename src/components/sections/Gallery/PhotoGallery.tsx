@@ -23,6 +23,13 @@ export default function PhotoGallery() {
           speed={500}
           plugins={[lgThumbnail, lgZoom]}
           elementClassNames="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"
+          mode="lg-fade"
+          download={false}
+          thumbnail={true}
+          zoom={true}
+          zoomFromOrigin={true}
+          allowMediaOverlap={true}
+          closeOnTap={true}
         >
           {galleryImages.map((image) => (
             <a
@@ -30,11 +37,15 @@ export default function PhotoGallery() {
               data-lg-size={`${image.width}-${image.height}`}
               className="gallery-item relative overflow-hidden rounded-lg aspect-square"
               href={image.src}
+              data-src={image.src}
             >
               <Image
                 src={image.src}
                 alt={image.alt}
                 fill
+                quality={100}
+                priority
+                unoptimized
                 className="object-cover hover:scale-105 transition-transform duration-300"
                 sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
               />
