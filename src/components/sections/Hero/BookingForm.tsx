@@ -28,7 +28,7 @@ export const BookingForm = () => {
   const [submitStatus, setSubmitStatus] = useState<"idle" | "success" | "error">("idle");
 
   // Replace with your deployed Google Apps Script Web App URL
-  const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/YOUR_DEPLOYMENT_ID/exec";
+  const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbxZeNL4kURXeBMZ0E-rmHB2Nwq7B3K8bjNaGwiCEaov0ID73NdcM4Uz6QbKIqq6aIn0/exec";
 
   const inputGroupClass = "relative flex items-center";
   const inputClass =
