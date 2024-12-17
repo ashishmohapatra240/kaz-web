@@ -43,9 +43,10 @@ export default function PhotoGallery() {
                 src={image.src}
                 alt={image.alt}
                 fill
-                quality={100}
-                priority
-                unoptimized
+                quality={80}
+                priority={false}
+                unoptimized={false}
+                loading="lazy"
                 className="object-cover hover:scale-105 transition-transform duration-300"
                 sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
               />
