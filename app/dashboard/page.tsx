@@ -3,8 +3,50 @@
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { motion } from "framer-motion";
-import { FaCalendarAlt, FaUsers } from "react-icons/fa";
+import {
+  Box,
+  Container,
+  Typography,
+  Paper,
+  Grid,
+  TextField,
+  Button,
+  IconButton,
+  Select,
+  MenuItem,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Card,
+  CardContent,
+  InputAdornment,
+  Stack,
+  Chip,
+  TableBody,
+  Table,
+  TableHead,
+  TableRow,
+  TableCell,
+} from "@mui/material";
+import {
+  Search as SearchIcon,
+  Star as StarIcon,
+  StarBorder as StarBorderIcon,
+  Edit as EditIcon,
+  Close as CloseIcon,
+  CalendarToday as CalendarIcon,
+  Group as GroupIcon,
+  ViewList as PlanIcon,
+  Refresh as RefreshIcon,
+} from "@mui/icons-material";
+import { useDebounce } from '@/app/hooks/useDebounce';
+
+interface BookingNote {
+  content: string;
+  createdAt: string;
+  createdBy: string;
+}
 
 interface Booking {
   _id: string;
@@ -13,6 +55,10 @@ interface Booking {
   persons: number;
   preferableDate: string;
   plan: string;
+  status: "pending" | "confirmed" | "cancelled" | "completed";
+  notes: BookingNote[];
+  isMarked: boolean;
+  lastUpdated: string;
   createdAt: string;
 }
 
@@ -21,18 +67,93 @@ export default function Dashboard() {
   const router = useRouter();
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(1);
+  const [limit] = useState(10);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [search, setSearch] = useState("");
+  const [totalPages, setTotalPages] = useState(1);
+  const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
+  // const [isNotesModalOpen, setIsNotesModalOpen] = useState(false);
+  const [newNote, setNewNote] = useState("");
+  const [statusFilter, setStatusFilter] = useState("");
+  const [markedFilter, setMarkedFilter] = useState("");
+  const debouncedSearch = useDebounce(searchTerm, 500);
 
   const fetchBookings = async () => {
     try {
-      const response = await fetch("/api/bookings/get");
+      setLoading(true);
+      const queryParams = new URLSearchParams({
+        page: page.toString(),
+        limit: limit.toString(),
+        search,
+        status: statusFilter,
+        isMarked: markedFilter,
+      });
+
+      const response = await fetch(`/api/bookings/get?${queryParams}`);
       if (response.ok) {
         const data = await response.json();
-        setBookings(data);
+        setBookings(data.bookings);
+        setTotalPages(data.pagination.pages);
       }
     } catch (error) {
       console.error("Error fetching bookings:", error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleStatusUpdate = async (bookingId: string, status: string) => {
+    try {
+      const response = await fetch(`/api/bookings/${bookingId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status }),
+      });
+      if (response.ok) {
+        fetchBookings();
+      }
+    } catch (error) {
+      console.error("Error updating status:", error);
+    }
+  };
+
+  const handleToggleMark = async (
+    bookingId: string,
+    currentMarked: boolean
+  ) => {
+    try {
+      const response = await fetch(`/api/bookings/${bookingId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ isMarked: !currentMarked }),
+      });
+      if (response.ok) {
+        fetchBookings();
+      }
+    } catch (error) {
+      console.error("Error toggling mark:", error);
+    }
+  };
+
+  const handleAddNote = async () => {
+    if (!selectedBooking || !newNote.trim()) return;
+
+    try {
+      const response = await fetch(`/api/bookings/${selectedBooking._id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ note: newNote }),
+      });
+
+      if (response.ok) {
+        setNewNote("");
+        fetchBookings();
+        const data = await response.json();
+        setSelectedBooking(data.booking);
+      }
+    } catch (error) {
+      console.error("Error adding note:", error);
     }
   };
 
@@ -48,7 +169,11 @@ export default function Dashboard() {
     if (session?.user?.role === "admin") {
       fetchBookings();
     }
-  }, [session, status, router]);
+  }, [session, status, router, page, search, statusFilter, markedFilter]);
+
+  useEffect(() => {
+    setSearch(debouncedSearch);
+  }, [debouncedSearch]);
 
   const stats = {
     totalBookings: bookings.length,
@@ -56,11 +181,11 @@ export default function Dashboard() {
     uniquePlans: new Set(bookings.map((b) => b.plan)).size,
   };
 
-  const fadeIn = {
-    initial: { opacity: 0, y: 20 },
-    animate: { opacity: 1, y: 0 },
-    transition: { duration: 0.5 },
-  };
+  // const fadeIn = {
+  //   initial: { opacity: 0, y: 20 },
+  //   animate: { opacity: 1, y: 0 },
+  //   transition: { duration: 0.5 },
+  // };
 
   if (loading) {
     return (
@@ -71,131 +196,272 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-4">
-      <div className="w-full max-w-6xl">
+    <Box sx={{ bgcolor: "grey.100", minHeight: "100vh", py: 4 }}>
+      <Container maxWidth="xl">
         {/* Header */}
-        <motion.div className="text-center mb-8" {...fadeIn}>
-          <h1 className="text-3xl font-bold text-gray-900 mb-4">
-            Bookings Dashboard
-          </h1>
-          <button
-            onClick={fetchBookings}
-            className="px-6 py-2 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-lg hover:scale-105 transition-transform"
-          >
-            Refresh
-          </button>
-        </motion.div>
-
-        {/* Stats Grid */}
-        <motion.div
-          className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8"
-          {...fadeIn}
+        <Box
+          sx={{
+            mb: 4,
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
         >
+          <Typography variant="h4" component="h1" fontWeight="bold">
+            Bookings Dashboard
+          </Typography>
+          <Button
+            variant="contained"
+            startIcon={<RefreshIcon />}
+            onClick={fetchBookings}
+          >
+            Refresh Data
+          </Button>
+        </Box>
+
+        {/* Stats Cards */}
+        <Grid container spacing={3} sx={{ mb: 4 }}>
           {[
             {
               title: "Total Bookings",
               value: stats.totalBookings,
-              bgColor: "bg-blue-50",
-              textColor: "text-blue-600",
-              icon: <FaCalendarAlt className="w-5 h-5" />,
+              icon: <CalendarIcon />,
+              color: "primary.main",
             },
             {
               title: "Total Persons",
               value: stats.totalPersons,
-              bgColor: "bg-green-50",
-              textColor: "text-green-600",
-              icon: <FaUsers className="w-5 h-5" />,
+              icon: <GroupIcon />,
+              color: "success.main",
             },
             {
               title: "Unique Plans",
               value: stats.uniquePlans,
-              bgColor: "bg-purple-50",
-              textColor: "text-purple-600",
-              icon: <FaCalendarAlt className="w-5 h-5" />,
+              icon: <PlanIcon />,
+              color: "secondary.main",
             },
           ].map((stat) => (
-            <motion.div
-              key={stat.title}
-              className="bg-white rounded-lg p-6 border border-gray-100 text-center"
-              whileHover={{ y: -3 }}
-            >
-              <div className="flex flex-col items-center justify-center">
-                <div className={`p-3 ${stat.bgColor} rounded-lg mb-3`}>
-                  {stat.icon}
-                </div>
-                <p className="text-sm font-medium text-gray-500">
-                  {stat.title}
-                </p>
-                <p className="text-2xl font-bold text-gray-900 mt-1">
-                  {stat.value}
-                </p>
-              </div>
-            </motion.div>
-          ))}
-        </motion.div>
-
-        {/* Table */}
-        <motion.div
-          className="bg-white rounded-lg border border-gray-100 overflow-hidden"
-          {...fadeIn}
-        >
-          <div className="overflow-x-auto">
-            <table className="w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
-                <tr>
-                  {[
-                    "Name",
-                    "Phone",
-                    "Persons",
-                    "Date",
-                    "Plan",
-                    "Booked On",
-                  ].map((header) => (
-                    <th
-                      key={header}
-                      className="px-4 py-3 text-xs font-medium text-gray-600 uppercase"
+            <Grid item xs={12} md={4} key={stat.title}>
+              <Card>
+                <CardContent>
+                  <Box sx={{ display: "flex", alignItems: "center" }}>
+                    <Box
+                      sx={{
+                        bgcolor: stat.color,
+                        color: "white",
+                        p: 1.5,
+                        borderRadius: 2,
+                        mr: 2,
+                      }}
                     >
-                      {header}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {bookings.map((booking, index) => (
-                  <motion.tr
-                    key={booking._id}
-                    className="hover:bg-gray-50 transition-colors"
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.1 }}
-                  >
-                    <td className="px-4 py-3 text-sm text-gray-900 text-center">
-                      {booking.name}
-                    </td>
-                    <td className="px-4 py-3 text-sm text-gray-600 text-center">
-                      {booking.phone}
-                    </td>
-                    <td className="px-4 py-3 text-sm text-gray-600 text-center">
-                      {booking.persons}
-                    </td>
-                    <td className="px-4 py-3 text-sm text-gray-600 text-center">
+                      {stat.icon}
+                    </Box>
+                    <Box>
+                      <Typography color="textSecondary" variant="body2">
+                        {stat.title}
+                      </Typography>
+                      <Typography variant="h5" component="div">
+                        {stat.value}
+                      </Typography>
+                    </Box>
+                  </Box>
+                </CardContent>
+              </Card>
+            </Grid>
+          ))}
+        </Grid>
+
+        {/* Filters */}
+        <Paper sx={{ p: 3, mb: 3 }}>
+          <Grid container spacing={3}>
+            <Grid item xs={12} md={6}>
+              <TextField
+                fullWidth
+                placeholder="Search bookings..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <SearchIcon />
+                    </InputAdornment>
+                  ),
+                }}
+              />
+            </Grid>
+            <Grid item xs={12} md={3}>
+              <Select
+                fullWidth
+                value={statusFilter}
+                onChange={(e) => setStatusFilter(e.target.value)}
+                displayEmpty
+              >
+                <MenuItem value="">All Status</MenuItem>
+                <MenuItem value="pending">Pending</MenuItem>
+                <MenuItem value="confirmed">Confirmed</MenuItem>
+                <MenuItem value="cancelled">Cancelled</MenuItem>
+                <MenuItem value="completed">Completed</MenuItem>
+              </Select>
+            </Grid>
+            <Grid item xs={12} md={3}>
+              <Select
+                fullWidth
+                value={markedFilter}
+                onChange={(e) => setMarkedFilter(e.target.value)}
+                displayEmpty
+              >
+                <MenuItem value="">All Bookings</MenuItem>
+                <MenuItem value="true">Marked</MenuItem>
+                <MenuItem value="false">Unmarked</MenuItem>
+              </Select>
+            </Grid>
+          </Grid>
+        </Paper>
+
+        {/* Bookings Table */}
+        <Paper>
+          <Box sx={{ overflow: "auto" }}>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Mark</TableCell>
+                  <TableCell>Name</TableCell>
+                  <TableCell>Phone</TableCell>
+                  <TableCell>Persons</TableCell>
+                  <TableCell>Date</TableCell>
+                  <TableCell>Plan</TableCell>
+                  <TableCell>Status</TableCell>
+                  <TableCell>Actions</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {bookings.map((booking) => (
+                  <TableRow key={booking._id}>
+                    <TableCell>
+                      <IconButton
+                        onClick={() =>
+                          handleToggleMark(booking._id, booking.isMarked)
+                        }
+                        color="warning"
+                      >
+                        {booking.isMarked ? <StarIcon /> : <StarBorderIcon />}
+                      </IconButton>
+                    </TableCell>
+                    <TableCell>{booking.name}</TableCell>
+                    <TableCell>{booking.phone}</TableCell>
+                    <TableCell>{booking.persons}</TableCell>
+                    <TableCell>
                       {new Date(booking.preferableDate).toLocaleDateString()}
-                    </td>
-                    <td className="px-4 py-3 text-center">
-                      <span className="px-2 py-1 text-xs font-medium rounded-full text-green-800">
-                        {booking.plan}
-                      </span>
-                    </td>
-                    <td className="px-4 py-3 text-sm text-gray-600 text-center">
-                      {new Date(booking.createdAt).toLocaleDateString()}
-                    </td>
-                  </motion.tr>
+                    </TableCell>
+                    <TableCell>
+                      <Chip label={booking.plan} color="success" size="small" />
+                    </TableCell>
+                    <TableCell>
+                      <Select
+                        value={booking.status}
+                        onChange={(e) =>
+                          handleStatusUpdate(booking._id, e.target.value)
+                        }
+                        size="small"
+                        sx={{
+                          "& .MuiSelect-select": {
+                            py: 0.5,
+                            px: 1,
+                          },
+                        }}
+                      >
+                        <MenuItem value="pending">Pending</MenuItem>
+                        <MenuItem value="confirmed">Confirmed</MenuItem>
+                        <MenuItem value="cancelled">Cancelled</MenuItem>
+                        <MenuItem value="completed">Completed</MenuItem>
+                      </Select>
+                    </TableCell>
+                    <TableCell>
+                      <IconButton
+                        onClick={() => setSelectedBooking(booking)}
+                        color="primary"
+                      >
+                        <EditIcon />
+                      </IconButton>
+                    </TableCell>
+                  </TableRow>
                 ))}
-              </tbody>
-            </table>
-          </div>
-        </motion.div>
-      </div>
-    </div>
+              </TableBody>
+            </Table>
+          </Box>
+
+          {/* Pagination */}
+          <Box sx={{ p: 2, display: "flex", justifyContent: "center" }}>
+            <Stack direction="row" spacing={2} alignItems="center">
+              <Button
+                onClick={() => setPage((p) => Math.max(1, p - 1))}
+                disabled={page === 1}
+                variant="outlined"
+              >
+                Previous
+              </Button>
+              <Typography>
+                Page {page} of {totalPages}
+              </Typography>
+              <Button
+                onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                disabled={page === totalPages}
+                variant="outlined"
+              >
+                Next
+              </Button>
+            </Stack>
+          </Box>
+        </Paper>
+
+        {/* Notes Dialog */}
+        <Dialog
+          open={selectedBooking !== null}
+          onClose={() => setSelectedBooking(null)}
+          maxWidth="sm"
+          fullWidth
+        >
+          <DialogTitle>
+            Notes for {selectedBooking?.name}
+            <IconButton
+              onClick={() => setSelectedBooking(null)}
+              sx={{ position: "absolute", right: 8, top: 8 }}
+            >
+              <CloseIcon />
+            </IconButton>
+          </DialogTitle>
+          <DialogContent dividers>
+            <Stack spacing={2}>
+              {selectedBooking?.notes.map((note, index) => (
+                <Paper key={index} variant="outlined" sx={{ p: 2 }}>
+                  <Typography variant="body1">{note.content}</Typography>
+                  <Typography variant="caption" color="textSecondary">
+                    By {note.createdBy} on{" "}
+                    {new Date(note.createdAt).toLocaleString()}
+                  </Typography>
+                </Paper>
+              ))}
+            </Stack>
+          </DialogContent>
+          <DialogActions sx={{ p: 2 }}>
+            <TextField
+              fullWidth
+              value={newNote}
+              onChange={(e) => setNewNote(e.target.value)}
+              placeholder="Add a note..."
+              size="small"
+              sx={{ mr: 2 }}
+            />
+            <Button
+              variant="contained"
+              onClick={handleAddNote}
+              disabled={!newNote.trim()}
+            >
+              Add Note
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </Container>
+    </Box>
   );
 }
