@@ -47,7 +47,7 @@ export const GuidedTourCard = ({ place }: GuidedTourCardProps) => {
   const itinerary = Array.isArray(place.itinerary) ? place.itinerary : [];
 
   return (
-    <div className="w-full col-span-full max-w-[1000px] mx-auto rounded-xl overflow-hidden bg-white shadow-lg hover:shadow-xl transition-all duration-300 group">
+    <div className="w-full col-span-full max-w-full mx-auto rounded-xl overflow-hidden bg-white shadow-lg hover:shadow-xl transition-all duration-300 group">
       <div className="grid grid-cols-1 lg:grid-cols-2">
         {/* Left side */}
         <div className="flex flex-col">
@@ -86,7 +86,7 @@ export const GuidedTourCard = ({ place }: GuidedTourCardProps) => {
               <div className="flex items-center text-[#CA6702] font-semibold">
                 <FaRupeeSign className="w-4 h-4" />
                 <span className="text-xl">{place.price} </span>
-                <span className="text-sm text-gray-600"> /person</span>
+                <span className="text-sm text-gray-600">/person</span>
               </div>
             </div>
 
