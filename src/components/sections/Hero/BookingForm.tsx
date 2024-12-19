@@ -9,6 +9,7 @@ import { PLAN_TYPES } from "./constants/plan";
 import dayjs from "dayjs";
 import { z } from "zod";
 import toast from "react-hot-toast";
+import { useMobileMenu } from "@/src/context/MobileMenuContext";
 
 const bookingSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -24,6 +25,8 @@ type PlanType = (typeof PLAN_TYPES)[number];
 // type BookingFormData = z.infer<typeof bookingSchema>;
 
 export const BookingForm = () => {
+  const { isMenuOpen } = useMobileMenu();
+
   const [formData, setFormData] = useState({
     name: "",
     phone: "",
@@ -136,7 +139,8 @@ export const BookingForm = () => {
   };
 
   return (
-    <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 w-[90%] max-w-5xl">
+    <div className={`fixed bottom-8 left-1/2 -translate-x-1/2 z-50 w-[90%] max-w-5xl transition-opacity duration-300
+                    ${isMenuOpen ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
       <div className="bg-white/95 backdrop-blur-md p-3 sm:p-5 rounded-2xl shadow-2xl border border-gray-100 
                     hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
         <div className="flex items-center gap-3 mb-3 sm:mb-5">
