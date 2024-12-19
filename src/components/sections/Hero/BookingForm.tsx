@@ -136,187 +136,189 @@ export const BookingForm = () => {
   };
 
   return (
-    <div className="bg-white/95 p-6 rounded-lg w-full shadow-xl backdrop-blur-sm border border-white/20">
-      <div className="flex items-center gap-2 mb-5">
-        <div className="w-1 h-5 bg-[#389844] rounded-full" />
-        <h3 className="text-lg font-semibold text-gray-800">Quick Booking</h3>
-      </div>
-
-      <form onSubmit={handleSubmit} className="space-y-4">
-        {/* Name & Phone */}
-        <div className="grid grid-cols-2 gap-3">
-          <div className={inputGroupClass}>
-            <div className="relative">
-              <FaUser
-                size={14}
-                className="absolute left-3 top-3 text-gray-400"
-              />
-              <input
-                type="text"
-                value={formData.name}
-                onChange={(e) =>
-                  setFormData((prev) => ({ ...prev, name: e.target.value }))
-                }
-                className={inputClass("name")}
-                placeholder="Your Name"
-              />
-            </div>
-            {errors.name && (
-              <span className="text-red-500 text-xs mt-1">{errors.name}</span>
-            )}
-          </div>
-
-          <div className={inputGroupClass}>
-            <div className="relative">
-              <FaPhone
-                size={14}
-                className="absolute left-3 top-3 text-gray-400"
-              />
-              <input
-                type="tel"
-                value={formData.phone}
-                onChange={(e) =>
-                  setFormData((prev) => ({ ...prev, phone: e.target.value }))
-                }
-                className={inputClass("phone")}
-                placeholder="Phone Number"
-              />
-            </div>
-            {errors.phone && (
-              <span className="text-red-500 text-xs mt-1">{errors.phone}</span>
-            )}
+    <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 w-[90%] max-w-5xl">
+      <div className="bg-white/95 backdrop-blur-md p-3 sm:p-5 rounded-2xl shadow-2xl border border-gray-100 
+                    hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+        <div className="flex items-center gap-3 mb-3 sm:mb-5">
+          <div className="w-1.5 h-6 bg-[#389844] rounded-full" />
+          <h3 className="text-lg sm:text-xl font-semibold text-gray-800">Quick Booking</h3>
+          <div className="ml-auto hidden sm:block">
+            <span className="text-xs text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
+              24/7 Booking Available
+            </span>
           </div>
         </div>
 
-        {/* Plan & Persons */}
-        <div className="grid grid-cols-2 gap-3">
-          <div className={inputGroupClass}>
-            <div className="relative">
-              <svg
-                className="absolute left-3 top-3 text-gray-400"
-                width="14"
-                height="14"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-              >
-                <path d="M3 6h18M3 12h18M3 18h18" />
-              </svg>
-              <select
-                value={formData.plan}
-                onChange={(e) =>
-                  setFormData((prev) => ({
-                    ...prev,
-                    plan: e.target.value as PlanType,
-                  }))
-                }
-                className={selectClass("plan")}
-              >
-                {PLAN_TYPES.map((plan) => (
-                  <option key={plan} value={plan}>
-                    {plan}
-                  </option>
-                ))}
-              </select>
+        <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-5">
+          <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 sm:gap-4">
+            {/* Name & Phone - now always side by side */}
+            <div className="col-span-2 grid grid-cols-2 gap-3 sm:gap-4">
+              <div className={inputGroupClass}>
+                <div className="relative group">
+                  <FaUser size={14} className="absolute left-3 top-3 text-gray-400 group-hover:text-[#389844] 
+                                             transition-colors duration-200" />
+                  <input
+                    type="text"
+                    value={formData.name}
+                    onChange={(e) => setFormData((prev) => ({ ...prev, name: e.target.value }))}
+                    className={`${inputClass("name")} hover:border-[#389844]/50 focus:ring-2 
+                              focus:ring-[#389844]/20 transition-all duration-200`}
+                    placeholder="Your Name"
+                  />
+                </div>
+                {errors.name && <span className="text-red-500 text-xs mt-1">{errors.name}</span>}
+              </div>
+
+              <div className={inputGroupClass}>
+                <div className="relative group">
+                  <FaPhone size={14} className="absolute left-3 top-3 text-gray-400 group-hover:text-[#389844] 
+                                             transition-colors duration-200" />
+                  <input
+                    type="tel"
+                    value={formData.phone}
+                    onChange={(e) => setFormData((prev) => ({ ...prev, phone: e.target.value }))}
+                    className={`${inputClass("phone")} hover:border-[#389844]/50 focus:ring-2 
+                              focus:ring-[#389844]/20 transition-all duration-200`}
+                    placeholder="Phone Number"
+                  />
+                </div>
+                {errors.phone && <span className="text-red-500 text-xs mt-1">{errors.phone}</span>}
+              </div>
             </div>
-            {errors.plan && (
-              <span className="text-red-500 text-xs mt-1">{errors.plan}</span>
-            )}
+
+            {/* Plan & Persons - side by side on mobile */}
+            <div className="col-span-1">
+              <div className={inputGroupClass}>
+                <div className="relative group">
+                  <svg
+                    className="absolute left-3 top-3 text-gray-400 group-hover:text-[#389844] 
+                            transition-colors duration-200"
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                  >
+                    <path d="M3 6h18M3 12h18M3 18h18" />
+                  </svg>
+                  <select
+                    value={formData.plan}
+                    onChange={(e) => setFormData((prev) => ({ ...prev, plan: e.target.value as PlanType }))}
+                    className={`${selectClass("plan")} hover:border-[#389844]/50 focus:ring-2 
+                              focus:ring-[#389844]/20 transition-all duration-200`}
+                  >
+                    {PLAN_TYPES.map((plan) => (
+                      <option key={plan} value={plan}>{plan}</option>
+                    ))}
+                  </select>
+                </div>
+                {errors.plan && <span className="text-red-500 text-xs mt-1">{errors.plan}</span>}
+              </div>
+            </div>
+            <div className="col-span-1">
+              <div className={inputGroupClass}>
+                <div className="relative group">
+                  <FaUser size={14} className="absolute left-3 top-3 text-gray-400 group-hover:text-[#389844] 
+                                         transition-colors duration-200" />
+                  <select
+                    value={formData.persons}
+                    onChange={(e) => setFormData((prev) => ({ ...prev, persons: e.target.value }))}
+                    className={`${selectClass("persons")} hover:border-[#389844]/50 focus:ring-2 
+                              focus:ring-[#389844]/20 transition-all duration-200`}
+                  >
+                    {[...Array(20)].map((_, i) => (
+                      <option key={i + 1} value={i + 1}>
+                        {i + 1} Person{i !== 0 && "s"}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                {errors.persons && <span className="text-red-500 text-xs mt-1">{errors.persons}</span>}
+              </div>
+            </div>
+
+            {/* Date Picker - full width on mobile */}
+            <div className="col-span-2 sm:col-span-1">
+              <div className="relative">
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DatePicker
+                    value={formData.preferableDate}
+                    onChange={(date) => setFormData((prev) => ({ ...prev, preferableDate: date }))}
+                    minDate={dayjs()}
+                    slotProps={{
+                      textField: {
+                        variant: "outlined",
+                        fullWidth: true,
+                        error: !!errors.preferableDate,
+                        helperText: errors.preferableDate,
+                        InputProps: {
+                          startAdornment: (
+                            <FaCalendarAlt className="text-gray-400 group-hover:text-[#389844] mr-2" size={16} />
+                          ),
+                        },
+                        sx: {
+                          "& .MuiOutlinedInput-root": {
+                            backgroundColor: "rgb(249 250 251)",
+                            fontSize: "0.875rem",
+                            transition: "all 0.2s",
+                            "&:hover": {
+                              "& fieldset": {
+                                borderColor: "rgba(56, 152, 68, 0.5)",
+                              },
+                            },
+                            "& fieldset": {
+                              borderColor: errors.preferableDate ? "#ef4444" : "rgb(229 231 235)",
+                            },
+                            "&.Mui-focused": {
+                              "& fieldset": {
+                                borderColor: "#389844",
+                                boxShadow: "0 0 0 4px rgba(56, 152, 68, 0.1)",
+                              },
+                            },
+                          },
+                          "& .MuiInputBase-input": {
+                            padding: "10px 14px",
+                            paddingLeft: "8px",
+                          },
+                        },
+                      },
+                    }}
+                  />
+                </LocalizationProvider>
+              </div>
+            </div>
           </div>
 
-          <div className={inputGroupClass}>
-            <div className="relative">
-              <FaUser
-                size={14}
-                className="absolute left-3 top-3 text-gray-400"
-              />
-              <select
-                value={formData.persons}
-                onChange={(e) =>
-                  setFormData((prev) => ({ ...prev, persons: e.target.value }))
-                }
-                className={selectClass("persons")}
-              >
-                {[...Array(20)].map((_, i) => (
-                  <option key={i + 1} value={i + 1}>
-                    {i + 1} Person{i !== 0 && "s"}
-                  </option>
-                ))}
-              </select>
-            </div>
-            {errors.persons && (
-              <span className="text-red-500 text-xs mt-1">
-                {errors.persons}
+          {/* Submit Button - adjusted padding for mobile */}
+          <button
+            type="submit"
+            disabled={isSubmitting}
+            className="w-full bg-[#389844] hover:bg-[#389844]/90 text-white font-medium
+                     py-2.5 sm:py-3.5 rounded-xl transition-all duration-300 text-sm hover:shadow-lg
+                     hover:shadow-[#389844]/20 transform hover:-translate-y-0.5
+                     active:translate-y-0 disabled:opacity-50 disabled:cursor-not-allowed
+                     disabled:hover:shadow-none disabled:hover:translate-y-0"
+          >
+            {isSubmitting ? (
+              <span className="flex items-center justify-center gap-2">
+                <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                </svg>
+                Booking...
+              </span>
+            ) : (
+              <span className="flex items-center justify-center gap-2">
+                Book Now
+                <svg className="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                </svg>
               </span>
             )}
-          </div>
-        </div>
-
-        {/* Date Picker */}
-        <div className="relative">
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Preferable Date
-          </label>
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DatePicker
-              value={formData.preferableDate}
-              onChange={(date) =>
-                setFormData((prev) => ({
-                  ...prev,
-                  preferableDate: date,
-                }))
-              }
-              minDate={dayjs()}
-              slotProps={{
-                textField: {
-                  variant: "outlined",
-                  fullWidth: true,
-                  error: !!errors.preferableDate,
-                  helperText: errors.preferableDate,
-                  InputProps: {
-                    startAdornment: (
-                      <FaCalendarAlt className="text-gray-400 mr-2" size={16} />
-                    ),
-                  },
-                  sx: {
-                    "& .MuiOutlinedInput-root": {
-                      backgroundColor: "rgb(249 250 251)",
-                      fontSize: "0.875rem",
-                      "& fieldset": {
-                        borderColor: errors.preferableDate
-                          ? "#ef4444"
-                          : "rgb(229 231 235)",
-                      },
-                      "&:hover fieldset": {
-                        borderColor: "#389844",
-                      },
-                      "&.Mui-focused fieldset": {
-                        borderColor: "#389844",
-                      },
-                    },
-                    "& .MuiInputBase-input": {
-                      padding: "10px 14px",
-                      paddingLeft: "8px",
-                    },
-                  },
-                },
-              }}
-            />
-          </LocalizationProvider>
-        </div>
-
-        {/* Submit Button */}
-        <button
-          type="submit"
-          disabled={isSubmitting}
-          className="w-full bg-[#389844] hover:bg-[#389844]/90 text-white font-medium
-                     py-3 rounded-md transition-all duration-200 text-sm hover:shadow-lg
-                     active:transform active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          {isSubmitting ? "Booking..." : "Book Now →"}
-        </button>
-      </form>
+          </button>
+        </form>
+      </div>
     </div>
   );
 };
