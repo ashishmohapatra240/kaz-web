@@ -6,6 +6,7 @@ import Providers from "./components/Providers";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/lib/auth";
 import { Toaster } from "react-hot-toast";
+import { MobileMenuProvider } from "@/src/context/MobileMenuContext";
 
 export const metadata: Metadata = {
   title: "Koraput Website",
@@ -22,12 +23,14 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body>
-        <Providers session={session}>
-          <Navbar />
-          <main className="pt-20 pb-20">{children}</main>
-          <Footer />
-          <Toaster position="top-center" />
-        </Providers>
+        <MobileMenuProvider>
+          <Providers session={session}>
+            <Navbar />
+            <main className="pt-20 pb-20">{children}</main>
+            <Footer />
+            <Toaster position="top-center" />
+          </Providers>
+        </MobileMenuProvider>
       </body>
     </html>
   );
