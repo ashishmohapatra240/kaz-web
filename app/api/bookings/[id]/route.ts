@@ -3,17 +3,11 @@ import connectDB from '@/app/lib/mongodb';
 import { Booking } from '@/app/models/booking';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/app/lib/auth';
-
-interface RouteParams {
-    params: {
-        id: string;
-    };
-    searchParams: { [key: string]: string | string[] | undefined };
-}
+import { NextRequest } from 'next/server';
 
 export async function PATCH(
-    request: Request,
-    { params }: RouteParams
+    request: NextRequest,
+    context: { params: { id: string } }
 ) {
     try {
         const session = await getServerSession(authOptions);
@@ -23,7 +17,7 @@ export async function PATCH(
 
         await connectDB();
         const body = await request.json();
-        const booking = await Booking.findById(params.id);
+        const booking = await Booking.findById(context.params.id);
 
         if (!booking) {
             return NextResponse.json({ message: 'Booking not found' }, { status: 404 });
