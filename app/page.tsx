@@ -4,13 +4,13 @@ import CampInfrastructure from "../src/components/sections/camping/CampInfrastru
 import AboutSection from "@/src/components/sections/about/AboutSection";
 import PhotoGallery from "@/src/components/sections/Gallery/PhotoGallery";
 import { Testimonials } from "@/src/components/sections/Testimonials/Testimonials";
+import { BookingForm } from "@/src/components/sections/Hero/BookingForm";
 
 export default function Home() {
   return (
-    <main>
-      <section id="home">
-        <Hero />
-      </section>
+    <>
+      <Hero />
+      <BookingForm />
       <section id="packages">
         <Packages />
       </section>
@@ -26,6 +26,6 @@ export default function Home() {
       <section id="testimonials">
         <Testimonials />
       </section>
-    </main>
+    </>
   );
 }
