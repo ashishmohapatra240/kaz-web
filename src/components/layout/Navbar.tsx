@@ -57,10 +57,10 @@ export const Navbar = () => {
           {/* Contact and Book Now - Desktop */}
           <div className="hidden lg:flex items-center gap-4 xl:gap-8">
             <div className="flex items-center gap-2 text-primary">
-              <span className="font-bold text-sm xl:text-[15px]">
-                021 3456 789
-              </span>
               <span>📞</span>
+              <span className="font-bold text-sm xl:text-[15px]">
+                7751053999
+              </span>
             </div>
             <Button variant="outline" className="text-sm xl:text-[15px]">
               Book Now →
