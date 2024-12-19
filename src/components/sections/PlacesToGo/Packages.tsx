@@ -5,7 +5,7 @@ import { TREK_PACKAGES, CAMPING_PACKAGES, GUIDED_TOUR_PACKAGES } from "./constan
 import { GuidedTourCard } from "./GuidedTourCard";
 
 export const Packages = () => {
-  const [activeTab, setActiveTab] = useState<"trek" | "camping" | "guided">("trek");
+  const [activeTab, setActiveTab] = useState<"all" | "trek" | "camping" | "guided">("all");
 
   return (
     <section className="container mx-auto px-4 py-16 bg-gray-50">
@@ -30,35 +30,45 @@ export const Packages = () => {
         </p>
       </div>
 
-      {/* Tab Bar */}
+      {/* Updated Tab Bar */}
       <div className="flex justify-center mb-12">
-        <div className="inline-flex rounded-lg border border-[#CA6702] p-1">
+        <div className="flex gap-8 border-b border-gray-200 max-w-[600px]">
+          <button
+            onClick={() => setActiveTab("all")}
+            className={`pb-2 text-sm font-medium transition-colors relative ${
+              activeTab === "all"
+                ? "text-[#CA6702] border-b-2 border-[#CA6702]"
+                : "text-gray-500 hover:text-[#CA6702]"
+            }`}
+          >
+            All
+          </button>
           <button
             onClick={() => setActiveTab("trek")}
-            className={`px-6 py-2 rounded-md text-sm font-medium transition-colors ${
+            className={`pb-2 text-sm font-medium transition-colors relative ${
               activeTab === "trek"
-                ? "bg-[#CA6702] text-white"
-                : "text-[#CA6702] hover:bg-[#CA6702]/10"
+                ? "text-[#CA6702] border-b-2 border-[#CA6702]"
+                : "text-gray-500 hover:text-[#CA6702]"
             }`}
           >
             Trek Packages
           </button>
           <button
             onClick={() => setActiveTab("camping")}
-            className={`px-6 py-2 rounded-md text-sm font-medium transition-colors ${
+            className={`pb-2 text-sm font-medium transition-colors relative ${
               activeTab === "camping"
-                ? "bg-[#CA6702] text-white"
-                : "text-[#CA6702] hover:bg-[#CA6702]/10"
+                ? "text-[#CA6702] border-b-2 border-[#CA6702]"
+                : "text-gray-500 hover:text-[#CA6702]"
             }`}
           >
             Camping Packages
           </button>
           <button
             onClick={() => setActiveTab("guided")}
-            className={`px-6 py-2 rounded-md text-sm font-medium transition-colors ${
+            className={`pb-2 text-sm font-medium transition-colors relative ${
               activeTab === "guided"
-                ? "bg-[#CA6702] text-white"
-                : "text-[#CA6702] hover:bg-[#CA6702]/10"
+                ? "text-[#CA6702] border-b-2 border-[#CA6702]"
+                : "text-gray-500 hover:text-[#CA6702]"
             }`}
           >
             Guided Tours
@@ -66,15 +76,15 @@ export const Packages = () => {
         </div>
       </div>
 
-      {/* Grid of Packages */}
+      {/* Updated Grid of Packages */}
       <div className={`grid ${activeTab === "guided" ? "" : "grid-cols-1 md:grid-cols-2 lg:grid-cols-3"} gap-8 max-w-[1150px] mx-auto`}>
-        {activeTab === "trek" && TREK_PACKAGES.map((package_) => (
+        {(activeTab === "all" || activeTab === "trek") && TREK_PACKAGES.map((package_) => (
           <PlaceCard key={package_.id} place={package_} />
         ))}
-        {activeTab === "camping" && CAMPING_PACKAGES.map((package_) => (
+        {(activeTab === "all" || activeTab === "camping") && CAMPING_PACKAGES.map((package_) => (
           <PlaceCard key={package_.id} place={package_} />
         ))}
-        {activeTab === "guided" && GUIDED_TOUR_PACKAGES.map((package_) => (
+        {(activeTab === "all" || activeTab === "guided") && GUIDED_TOUR_PACKAGES.map((package_) => (
           <GuidedTourCard key={package_.id} place={package_} />
         ))}
       </div>
