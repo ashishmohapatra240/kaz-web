@@ -21,6 +21,27 @@ const bookingSchema = new mongoose.Schema({
         type: String,
         required: [true, 'Plan type is required'],
     },
+    status: {
+        type: String,
+        enum: ['pending', 'confirmed', 'cancelled', 'completed'],
+        default: 'pending'
+    },
+    notes: [{
+        content: String,
+        createdAt: {
+            type: Date,
+            default: Date.now
+        },
+        createdBy: String
+    }],
+    isMarked: {
+        type: Boolean,
+        default: false
+    },
+    lastUpdated: {
+        type: Date,
+        default: Date.now
+    },
     createdAt: {
         type: Date,
         default: Date.now,
