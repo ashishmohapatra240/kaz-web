@@ -4,9 +4,16 @@ import { Booking } from '@/app/models/booking';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/app/lib/auth';
 
+interface RouteParams {
+    params: {
+        id: string;
+    };
+    searchParams: { [key: string]: string | string[] | undefined };
+}
+
 export async function PATCH(
     request: Request,
-    { params }: { params: { id: string } }
+    { params }: RouteParams
 ) {
     try {
         const session = await getServerSession(authOptions);
