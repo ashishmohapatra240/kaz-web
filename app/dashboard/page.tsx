@@ -31,6 +31,7 @@ import {
   Menu,
   ListItemIcon,
   ListItemText,
+  CircularProgress,
 } from "@mui/material";
 import {
   Search as SearchIcon,
@@ -95,6 +96,7 @@ export default function Dashboard() {
   } | null>(null);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [selectedNote, setSelectedNote] = useState<string | null>(null);
+  const [actionLoading, setActionLoading] = useState<string | null>(null);
 
   const fetchBookings = async () => {
     try {
@@ -122,6 +124,7 @@ export default function Dashboard() {
 
   const handleStatusUpdate = async (bookingId: string, status: string) => {
     try {
+      setActionLoading(bookingId);
       const response = await fetch(`/api/bookings/${bookingId}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
@@ -132,6 +135,8 @@ export default function Dashboard() {
       }
     } catch (error) {
       console.error("Error updating status:", error);
+    } finally {
+      setActionLoading(null);
     }
   };
 
@@ -218,9 +223,17 @@ export default function Dashboard() {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center min-h-screen bg-gray-50">
-        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-black"></div>
-      </div>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          minHeight: "100vh",
+          bgcolor: "grey.100",
+        }}
+      >
+        <CircularProgress size={60} />
+      </Box>
     );
   }
 
@@ -392,6 +405,7 @@ export default function Dashboard() {
                           handleStatusUpdate(booking._id, e.target.value)
                         }
                         size="small"
+                        disabled={actionLoading === booking._id}
                         sx={{
                           "& .MuiSelect-select": {
                             py: 0.5,
@@ -399,10 +413,16 @@ export default function Dashboard() {
                           },
                         }}
                       >
-                        <MenuItem value="pending">Pending</MenuItem>
-                        <MenuItem value="confirmed">Confirmed</MenuItem>
-                        <MenuItem value="cancelled">Cancelled</MenuItem>
-                        <MenuItem value="completed">Completed</MenuItem>
+                        {actionLoading === booking._id ? (
+                          <CircularProgress size={20} sx={{ mx: 1 }} />
+                        ) : (
+                          <>
+                            <MenuItem value="pending">Pending</MenuItem>
+                            <MenuItem value="confirmed">Confirmed</MenuItem>
+                            <MenuItem value="cancelled">Cancelled</MenuItem>
+                            <MenuItem value="completed">Completed</MenuItem>
+                          </>
+                        )}
                       </Select>
                     </TableCell>
                     <TableCell>
