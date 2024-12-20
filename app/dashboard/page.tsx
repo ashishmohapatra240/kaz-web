@@ -28,6 +28,9 @@ import {
   TableHead,
   TableRow,
   TableCell,
+  Menu,
+  ListItemIcon,
+  ListItemText,
 } from "@mui/material";
 import {
   Search as SearchIcon,
@@ -39,10 +42,13 @@ import {
   Group as GroupIcon,
   ViewList as PlanIcon,
   Refresh as RefreshIcon,
+  Delete as DeleteIcon,
+  MoreVert as MoreVertIcon,
 } from "@mui/icons-material";
-import { useDebounce } from '@/app/hooks/useDebounce';
+import { useDebounce } from "@/app/hooks/useDebounce";
 
 interface BookingNote {
+  _id: string;
   content: string;
   createdAt: string;
   createdBy: string;
@@ -62,6 +68,12 @@ interface Booking {
   createdAt: string;
 }
 
+interface NoteActionPayload {
+  noteAction: "add" | "update" | "delete";
+  note?: string;
+  noteId?: string;
+}
+
 export default function Dashboard() {
   const { data: session, status } = useSession();
   const router = useRouter();
@@ -73,11 +85,16 @@ export default function Dashboard() {
   const [search, setSearch] = useState("");
   const [totalPages, setTotalPages] = useState(1);
   const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
-  // const [isNotesModalOpen, setIsNotesModalOpen] = useState(false);
   const [newNote, setNewNote] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
   const [markedFilter, setMarkedFilter] = useState("");
   const debouncedSearch = useDebounce(searchTerm, 500);
+  const [editingNote, setEditingNote] = useState<{
+    id: string;
+    content: string;
+  } | null>(null);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [selectedNote, setSelectedNote] = useState<string | null>(null);
 
   const fetchBookings = async () => {
     try {
@@ -136,24 +153,42 @@ export default function Dashboard() {
     }
   };
 
-  const handleAddNote = async () => {
-    if (!selectedBooking || !newNote.trim()) return;
+  const handleNoteAction = async (
+    action: "add" | "update" | "delete",
+    noteId?: string
+  ) => {
+    if (!selectedBooking) return;
 
     try {
+      const payload: NoteActionPayload = {
+        noteAction: action,
+      };
+
+      if (action === "add") {
+        payload.note = newNote;
+      } else if (action === "update" && editingNote) {
+        payload.noteId = editingNote.id;
+        payload.note = editingNote.content;
+      } else if (action === "delete" && noteId) {
+        payload.noteId = noteId;
+      }
+
       const response = await fetch(`/api/bookings/${selectedBooking._id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ note: newNote }),
+        body: JSON.stringify(payload),
       });
 
       if (response.ok) {
-        setNewNote("");
-        fetchBookings();
         const data = await response.json();
         setSelectedBooking(data.booking);
+        setNewNote("");
+        setEditingNote(null);
+        setAnchorEl(null);
+        fetchBookings(); // Refresh the bookings list
       }
     } catch (error) {
-      console.error("Error adding note:", error);
+      console.error("Error handling note:", error);
     }
   };
 
@@ -180,12 +215,6 @@ export default function Dashboard() {
     totalPersons: bookings.reduce((acc, booking) => acc + booking.persons, 0),
     uniquePlans: new Set(bookings.map((b) => b.plan)).size,
   };
-
-  // const fadeIn = {
-  //   initial: { opacity: 0, y: 20 },
-  //   animate: { opacity: 1, y: 0 },
-  //   transition: { duration: 0.5 },
-  // };
 
   if (loading) {
     return (
@@ -414,7 +443,7 @@ export default function Dashboard() {
           </Box>
         </Paper>
 
-        {/* Notes Dialog */}
+        {/* Updated Notes Dialog */}
         <Dialog
           open={selectedBooking !== null}
           onClose={() => setSelectedBooking(null)}
@@ -433,33 +462,127 @@ export default function Dashboard() {
           <DialogContent dividers>
             <Stack spacing={2}>
               {selectedBooking?.notes.map((note, index) => (
-                <Paper key={index} variant="outlined" sx={{ p: 2 }}>
-                  <Typography variant="body1">{note.content}</Typography>
-                  <Typography variant="caption" color="textSecondary">
+                <Paper
+                  key={note._id || index}
+                  variant="outlined"
+                  sx={{ p: 2, position: "relative" }}
+                >
+                  {editingNote?.id === note._id ? (
+                    <TextField
+                      fullWidth
+                      multiline
+                      value={editingNote.content}
+                      onChange={(e) => {
+                        if (editingNote) {
+                          setEditingNote({
+                            id: editingNote.id,
+                            content: e.target.value,
+                          });
+                        }
+                      }}
+                      size="small"
+                      autoFocus
+                    />
+                  ) : (
+                    <Typography variant="body1">{note.content}</Typography>
+                  )}
+                  <Typography
+                    variant="caption"
+                    color="textSecondary"
+                    display="block"
+                    mt={1}
+                  >
                     By {note.createdBy} on{" "}
                     {new Date(note.createdAt).toLocaleString()}
                   </Typography>
+
+                  <IconButton
+                    size="small"
+                    sx={{ position: "absolute", top: 8, right: 8 }}
+                    onClick={(e) => {
+                      setAnchorEl(e.currentTarget);
+                      setSelectedNote(note._id);
+                    }}
+                  >
+                    <MoreVertIcon />
+                  </IconButton>
                 </Paper>
               ))}
             </Stack>
           </DialogContent>
           <DialogActions sx={{ p: 2 }}>
-            <TextField
-              fullWidth
-              value={newNote}
-              onChange={(e) => setNewNote(e.target.value)}
-              placeholder="Add a note..."
-              size="small"
-              sx={{ mr: 2 }}
-            />
-            <Button
-              variant="contained"
-              onClick={handleAddNote}
-              disabled={!newNote.trim()}
-            >
-              Add Note
-            </Button>
+            {editingNote ? (
+              <>
+                <Button onClick={() => setEditingNote(null)} color="inherit">
+                  Cancel
+                </Button>
+                <Button
+                  variant="contained"
+                  onClick={() => handleNoteAction("update")}
+                  disabled={!editingNote.content.trim()}
+                >
+                  Update Note
+                </Button>
+              </>
+            ) : (
+              <>
+                <TextField
+                  fullWidth
+                  value={newNote}
+                  onChange={(e) => setNewNote(e.target.value)}
+                  placeholder="Add a note..."
+                  size="small"
+                  sx={{ mr: 2 }}
+                />
+                <Button
+                  variant="contained"
+                  onClick={() => handleNoteAction("add")}
+                  disabled={!newNote.trim()}
+                >
+                  Add Note
+                </Button>
+              </>
+            )}
           </DialogActions>
+
+          {/* Note Actions Menu */}
+          <Menu
+            anchorEl={anchorEl}
+            open={Boolean(anchorEl)}
+            onClose={() => {
+              setAnchorEl(null);
+              setSelectedNote(null);
+            }}
+          >
+            <MenuItem
+              onClick={() => {
+                const note = selectedBooking?.notes.find(
+                  (n) => n._id === selectedNote
+                );
+                if (note) {
+                  setEditingNote({ id: note._id, content: note.content });
+                }
+                setAnchorEl(null);
+              }}
+            >
+              <ListItemIcon>
+                <EditIcon fontSize="small" />
+              </ListItemIcon>
+              <ListItemText>Edit</ListItemText>
+            </MenuItem>
+            <MenuItem
+              onClick={() => {
+                if (selectedNote) {
+                  handleNoteAction("delete", selectedNote);
+                }
+              }}
+            >
+              <ListItemIcon>
+                <DeleteIcon fontSize="small" color="error" />
+              </ListItemIcon>
+              <ListItemText>Delete</ListItemText>
+            </MenuItem>
+          </Menu>
         </Dialog>
       </Container>
     </Box>
