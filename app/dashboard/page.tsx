@@ -1,7 +1,7 @@
 "use client";
 
 import { useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import {
   Box,
@@ -75,6 +75,13 @@ interface NoteActionPayload {
   noteId?: string;
 }
 
+const STATUS_OPTIONS = [
+  { value: 'pending', label: 'Pending' },
+  { value: 'confirmed', label: 'Confirmed' },
+  { value: 'cancelled', label: 'Cancelled' },
+  { value: 'completed', label: 'Completed' },
+] as const;
+
 export default function Dashboard() {
   const { data: session, status } = useSession();
   const router = useRouter();
@@ -89,6 +96,7 @@ export default function Dashboard() {
   const [newNote, setNewNote] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
   const [markedFilter, setMarkedFilter] = useState("");
+  const [planFilter, setPlanFilter] = useState("");
   const debouncedSearch = useDebounce(searchTerm, 500);
   const [editingNote, setEditingNote] = useState<{
     id: string;
@@ -98,7 +106,7 @@ export default function Dashboard() {
   const [selectedNote, setSelectedNote] = useState<string | null>(null);
   const [actionLoading, setActionLoading] = useState<string | null>(null);
 
-  const fetchBookings = async () => {
+  const fetchBookings = useCallback(async () => {
     try {
       setLoading(true);
       const queryParams = new URLSearchParams({
@@ -107,6 +115,7 @@ export default function Dashboard() {
         search,
         status: statusFilter,
         isMarked: markedFilter,
+        plan: planFilter,
       });
 
       const response = await fetch(`/api/bookings/get?${queryParams}`);
@@ -120,7 +129,7 @@ export default function Dashboard() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [page, limit, search, statusFilter, markedFilter, planFilter]);
 
   const handleStatusUpdate = async (bookingId: string, status: string) => {
     try {
@@ -145,16 +154,21 @@ export default function Dashboard() {
     currentMarked: boolean
   ) => {
     try {
+      setActionLoading(bookingId);
       const response = await fetch(`/api/bookings/${bookingId}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ isMarked: !currentMarked }),
       });
       if (response.ok) {
-        fetchBookings();
+        await fetchBookings();
+      } else {
+        throw new Error('Failed to update marking');
       }
     } catch (error) {
       console.error("Error toggling mark:", error);
+    } finally {
+      setActionLoading(null);
     }
   };
 
@@ -165,6 +179,7 @@ export default function Dashboard() {
     if (!selectedBooking) return;
 
     try {
+      setActionLoading(selectedBooking._id);
       const payload: NoteActionPayload = {
         noteAction: action,
       };
@@ -190,10 +205,14 @@ export default function Dashboard() {
         setNewNote("");
         setEditingNote(null);
         setAnchorEl(null);
-        fetchBookings(); // Refresh the bookings list
+        await fetchBookings(); // Refresh the bookings list
+      } else {
+        throw new Error('Failed to update notes');
       }
     } catch (error) {
       console.error("Error handling note:", error);
+    } finally {
+      setActionLoading(null);
     }
   };
 
@@ -205,11 +224,13 @@ export default function Dashboard() {
     if (session?.user?.role !== "admin") {
       router.push("/unauthorized");
     }
+  }, [session, status, router]);
 
+  useEffect(() => {
     if (session?.user?.role === "admin") {
       fetchBookings();
     }
-  }, [session, status, router, page, search, statusFilter, markedFilter]);
+  }, [page, search, statusFilter, markedFilter, planFilter, fetchBookings]);
 
   useEffect(() => {
     setSearch(debouncedSearch);
@@ -316,7 +337,7 @@ export default function Dashboard() {
         {/* Filters */}
         <Paper sx={{ p: 3, mb: 3 }}>
           <Grid container spacing={3}>
-            <Grid item xs={12} md={6}>
+            <Grid item xs={12} md={3}>
               <TextField
                 fullWidth
                 placeholder="Search bookings..."
@@ -339,10 +360,11 @@ export default function Dashboard() {
                 displayEmpty
               >
                 <MenuItem value="">All Status</MenuItem>
-                <MenuItem value="pending">Pending</MenuItem>
-                <MenuItem value="confirmed">Confirmed</MenuItem>
-                <MenuItem value="cancelled">Cancelled</MenuItem>
-                <MenuItem value="completed">Completed</MenuItem>
+                {STATUS_OPTIONS.map((status) => (
+                  <MenuItem key={status.value} value={status.value}>
+                    {status.label}
+                  </MenuItem>
+                ))}
               </Select>
             </Grid>
             <Grid item xs={12} md={3}>
@@ -355,6 +377,21 @@ export default function Dashboard() {
                 <MenuItem value="">All Bookings</MenuItem>
                 <MenuItem value="true">Marked</MenuItem>
                 <MenuItem value="false">Unmarked</MenuItem>
+              </Select>
+            </Grid>
+            <Grid item xs={12} md={3}>
+              <Select
+                fullWidth
+                value={planFilter}
+                onChange={(e) => setPlanFilter(e.target.value)}
+                displayEmpty
+              >
+                <MenuItem value="">All Plans</MenuItem>
+                {Array.from(new Set(bookings.map((b) => b.plan))).map((plan) => (
+                  <MenuItem key={plan} value={plan}>
+                    {plan}
+                  </MenuItem>
+                ))}
               </Select>
             </Grid>
           </Grid>
@@ -401,29 +438,34 @@ export default function Dashboard() {
                     <TableCell>
                       <Select
                         value={booking.status}
-                        onChange={(e) =>
-                          handleStatusUpdate(booking._id, e.target.value)
-                        }
+                        onChange={(e) => handleStatusUpdate(booking._id, e.target.value)}
                         size="small"
                         disabled={actionLoading === booking._id}
                         sx={{
-                          "& .MuiSelect-select": {
+                          minWidth: 120,
+                          '& .MuiSelect-select': {
                             py: 0.5,
                             px: 1,
                           },
                         }}
                       >
-                        {actionLoading === booking._id ? (
-                          <CircularProgress size={20} sx={{ mx: 1 }} />
-                        ) : (
-                          <>
-                            <MenuItem value="pending">Pending</MenuItem>
-                            <MenuItem value="confirmed">Confirmed</MenuItem>
-                            <MenuItem value="cancelled">Cancelled</MenuItem>
-                            <MenuItem value="completed">Completed</MenuItem>
-                          </>
-                        )}
+                        {STATUS_OPTIONS.map((status) => (
+                          <MenuItem key={status.value} value={status.value}>
+                            {status.label}
+                          </MenuItem>
+                        ))}
                       </Select>
+                      {actionLoading === booking._id && (
+                        <CircularProgress 
+                          size={20} 
+                          sx={{ 
+                            position: 'absolute',
+                            right: '40px',
+                            top: '50%',
+                            marginTop: '-10px'
+                          }} 
+                        />
+                      )}
                     </TableCell>
                     <TableCell>
                       <IconButton
