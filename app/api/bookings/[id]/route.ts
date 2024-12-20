@@ -7,7 +7,7 @@ import { NextRequest } from 'next/server';
 
 export async function PATCH(
     request: NextRequest,
-    context: { params: { id: string } }
+    { params }: { params: { id: string } }
 ) {
     try {
         const session = await getServerSession(authOptions);
@@ -17,7 +17,7 @@ export async function PATCH(
 
         await connectDB();
         const body = await request.json();
-        const booking = await Booking.findById(context.params.id);
+        const booking = await Booking.findById(params.id);
 
         if (!booking) {
             return NextResponse.json({ message: 'Booking not found' }, { status: 404 });
