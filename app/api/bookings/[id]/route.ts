@@ -18,7 +18,7 @@ export async function PATCH(
     context: { params: { id: string } }
 ) {
     try {
-        const { id } = context.params;
+        const { id } = await context.params;
         const session = await getServerSession(authOptions);
         if (!session || session.user?.role !== 'admin') {
             return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
