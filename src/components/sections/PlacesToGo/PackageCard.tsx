@@ -1,7 +1,6 @@
 import Image from "next/image";
 import { Place } from "./types";
 import { FaStar, FaClock, FaCheck, FaMapMarkerAlt } from "react-icons/fa";
-import { Button } from "../../ui/Button";
 
 interface PlaceCardProps {
   place: Place;
@@ -9,7 +8,7 @@ interface PlaceCardProps {
 
 export const PlaceCard = ({ place }: PlaceCardProps) => {
   return (
-    <div className="w-full max-w-[330px] h-full mx-auto rounded-xl overflow-hidden flex flex-col bg-white shadow-lg hover:shadow-xl transition-all duration-300 group">
+    <div className="w-full max-w-[330px] h-full mx-auto overflow-hidden flex flex-col bg-white shadow-lg hover:shadow-xl transition-all duration-300 group">
       {/* Image Container */}
       <div className="relative h-[220px] w-full overflow-hidden flex-shrink-0">
         <Image
@@ -70,18 +69,15 @@ export const PlaceCard = ({ place }: PlaceCardProps) => {
           </div>
         </div>
 
-        {/* Price and Button */}
+        {/* Price Section */}
         <div className="flex items-center justify-between pt-4 border-t border-gray-100 mt-auto">
-          <div className="flex flex-col">
-            <span className="text-sm text-gray-500">Starting from</span>
-            <div className="flex items-baseline gap-1">
-              <span className="text-2xl font-bold text-[#CA6702]">
-                ₹{place.price}
-              </span>
-              <span className="text-sm text-gray-500">/person</span>
-            </div>
+          <span className="text-gray-500 text-sm">Starting from</span>
+          <div className="flex items-baseline gap-1.5">
+            <span className="text-2xl font-bold text-[#CA6702]">
+              ₹{place.price}
+            </span>
+            <span className="text-gray-500 text-sm">/person</span>
           </div>
-          <Button variant="solid">Book Now</Button>
         </div>
       </div>
     </div>

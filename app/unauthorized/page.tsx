@@ -4,7 +4,7 @@ import Link from "next/link";
 export default function UnauthorizedPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <div className="max-w-md w-full p-8 bg-white rounded-lg shadow-lg text-center">
+      <div className="max-w-md w-full p-8 bg-white shadow-lg text-center">
         <h1 className="text-2xl font-bold text-red-600 mb-4">
           Unauthorized Access
         </h1>
@@ -13,7 +13,7 @@ export default function UnauthorizedPage() {
         </p>
         <Link
           href="/"
-          className="inline-block px-6 py-2 bg-dark text-white rounded hover:bg-gray-800 transition-colors"
+          className="inline-block px-6 py-2 bg-dark text-white hover:bg-gray-800 transition-colors"
         >
           Return Home
         </Link>

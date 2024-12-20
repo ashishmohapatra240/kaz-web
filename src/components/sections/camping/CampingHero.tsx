@@ -3,7 +3,7 @@ import Image from "next/image";
 
 export default function CampingHero() {
   return (
-    <div className="relative w-full max-w-[1050px] h-[400px] sm:h-[300px] mx-auto rounded-xl overflow-hidden group">
+    <div className="relative w-full max-w-[1050px] h-[400px] sm:h-[300px] mx-auto overflow-hidden group">
       {/* Background Image */}
       <Image
         src="/images/camping.jpg"

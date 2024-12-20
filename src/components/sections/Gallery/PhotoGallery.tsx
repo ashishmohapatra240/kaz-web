@@ -35,7 +35,7 @@ export default function PhotoGallery() {
             <a
               key={image.id}
               data-lg-size={`${image.width}-${image.height}`}
-              className="gallery-item relative overflow-hidden rounded-lg aspect-square"
+              className="gallery-item relative overflow-hidden aspect-square"
               href={image.src}
               data-src={image.src}
             >

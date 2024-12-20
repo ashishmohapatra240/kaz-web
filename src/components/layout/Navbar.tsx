@@ -6,6 +6,7 @@ import Image from "next/image";
 import { navigationLinks } from "@/src/constants/navigation";
 // import { MobileMenu } from "./MobileMenu";
 import { useMobileMenu } from "@/src/context/MobileMenuContext";
+import { FaPhone } from "react-icons/fa";
 
 export const Navbar = () => {
   const { isMenuOpen, setIsMenuOpen } = useMobileMenu();
@@ -29,7 +30,7 @@ export const Navbar = () => {
           {/* Logo */}
           <a
             href="#home"
-            className="relative w-24 sm:w-32 h-14 sm:h-14"
+            className="relative w-24 sm:w-32 h-10 sm:h-10"
             onClick={(e) => handleScroll(e, "#home")}
           >
             <Image
@@ -48,7 +49,7 @@ export const Navbar = () => {
                 key={link.href}
                 href={link.href}
                 onClick={(e) => handleScroll(e, link.href)}
-                className="text-white hover:text-primary font-bold text-sm xl:text-[15px] uppercase tracking-wider transition-colors"
+                className="text-white hover:text-white font-bold text-sm xl:text-[15px] uppercase tracking-wider transition-colors"
               >
                 {link.label}
               </a>
@@ -57,9 +58,9 @@ export const Navbar = () => {
 
           {/* Contact and Book Now - Desktop */}
           <div className="hidden lg:flex items-center gap-4 xl:gap-8">
-            <div className="flex items-center gap-2 text-primary">
-              <span>📞</span>
-              <span className="font-bold text-sm xl:text-[15px]">
+            <div className="flex items-center gap-2 text-white">
+              <FaPhone size={20} />
+              <span className="font-bold text-sm xl:text-[16px]">
                 7751053999
               </span>
             </div>
@@ -145,8 +146,8 @@ export const Navbar = () => {
             ))}
             {/* Mobile Contact Info */}
             <div className="flex flex-col items-center gap-4 mt-8">
-              <div className="flex items-center gap-2 text-primary">
-                <span>📞</span>
+              <div className="flex items-center gap-2 text-white">
+                <FaPhone size={20} />
                 <span className="font-bold">7751053999</span>
               </div>
               {/* <Button variant="outline" className="text-base">

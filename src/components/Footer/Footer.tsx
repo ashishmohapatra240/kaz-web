@@ -63,7 +63,7 @@ export const Footer = () => {
                 <a
                   key={social.platform}
                   href={social.url}
-                  className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center
+                  className="w-8 h-8 bg-white/10 flex items-center justify-center
                     text-white hover:bg-[#389844] transition-all duration-200"
                   aria-label={`Follow us on ${social.platform}`}
                 >

@@ -69,7 +69,7 @@ export default function LoginPage() {
                 type="email"
                 name="email"
                 required
-                className="w-full p-2 border border-gray-300 rounded focus:ring-1 focus:ring-gray-200 focus:border-gray-300 outline-none text-sm"
+                className="w-full p-2 border border-gray-300 focus:ring-1 focus:ring-gray-200 focus:border-gray-300 outline-none text-sm"
                 placeholder="Enter your email"
               />
             </div>
@@ -86,20 +86,20 @@ export default function LoginPage() {
                 type="password"
                 name="password"
                 required
-                className="w-full p-2 border border-gray-300 rounded focus:ring-1 focus:ring-gray-200 focus:border-gray-300 outline-none text-sm"
+                className="w-full p-2 border border-gray-300 focus:ring-1 focus:ring-gray-200 focus:border-gray-300 outline-none text-sm"
                 placeholder="Enter your password"
               />
             </div>
 
             {error && (
-              <div className="p-2 text-sm text-red-600 bg-red-50 border border-red-200 rounded">
+              <div className="p-2 text-sm text-red-600 bg-red-50 border border-red-200">
                 {error}
               </div>
             )}
 
             <button
               type="submit"
-              className="w-full p-3 bg-dark text-white rounded hover:bg-gray-800 transition-colors text-sm font-medium py-4"
+              className="w-full p-3 bg-dark text-white hover:bg-gray-800 transition-colors text-sm font-medium py-4"
             >
               Sign In
             </button>

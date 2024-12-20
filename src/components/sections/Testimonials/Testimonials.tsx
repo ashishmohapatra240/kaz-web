@@ -24,7 +24,7 @@ export const Testimonials = () => {
               className="mx-4 min-w-[300px] max-w-[300px] bg-white border border-gray-100 rounded-lg p-6"
             >
               <div className="flex items-center gap-4 mb-4">
-                <div className="w-12 h-12 relative rounded-full overflow-hidden border border-gray-100">
+                <div className="w-10 h-10 relative overflow-hidden border border-gray-100 rounded-full">
                   <Image
                     src={testimonial.image}
                     alt={testimonial.name}
@@ -59,7 +59,7 @@ export const Testimonials = () => {
               className="mx-4 min-w-[300px] max-w-[300px] bg-white border border-gray-100 rounded-lg p-6"
             >
               <div className="flex items-center gap-4 mb-4">
-                <div className="w-12 h-12 relative rounded-full overflow-hidden border border-gray-100">
+                <div className="w-10 h-10 relative rounded-full overflow-hidden border border-gray-100">
                   <Image
                     src={testimonial.image}
                     alt={testimonial.name}

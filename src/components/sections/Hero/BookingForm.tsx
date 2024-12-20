@@ -30,7 +30,7 @@ export const BookingForm = () => {
   const [formData, setFormData] = useState({
     name: "",
     phone: "",
-    persons: "2",
+    persons: "1",
     preferableDate: null as dayjs.Dayjs | null,
     plan: "Meyamali peak camp & Trek" as PlanType,
   });
@@ -49,7 +49,7 @@ export const BookingForm = () => {
     }`;
   const selectClass = (
     fieldName: string
-  ) => `w-full px-3 py-2.5 pl-9 pr-8 bg-gray-50 rounded-md text-sm appearance-none outline-none border 
+  ) => `w-full px-3 py-2.5 pl-9 pr-8 bg-gray-50 text-sm appearance-none outline-none border 
     transition-colors ${
       errors[fieldName]
         ? "border-red-500"
@@ -139,9 +139,9 @@ export const BookingForm = () => {
   };
 
   return (
-    <div className={`fixed bottom-8 left-1/2 -translate-x-1/2 z-50 w-[90%] max-w-5xl transition-opacity duration-300
+    <div className={`fixed bottom-8 left-1/2 -translate-x-1/2 z-50 w-[100%] max-w-5xl transition-opacity duration-300
                     ${isMenuOpen ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
-      <div className="bg-white/95 backdrop-blur-md p-3 sm:p-5 rounded-2xl shadow-2xl border border-gray-100 
+      <div className="bg-white/95 backdrop-blur-md p-3 sm:p-5 shadow-2xl border border-gray-100 
                     hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
         <div className="flex items-center gap-3 mb-3 sm:mb-5">
           <div className="w-1.5 h-6 bg-[#389844] rounded-full" />
@@ -299,7 +299,7 @@ export const BookingForm = () => {
             type="submit"
             disabled={isSubmitting}
             className="w-full bg-[#389844] hover:bg-[#389844]/90 text-white font-medium
-                     py-2.5 sm:py-3.5 rounded-xl transition-all duration-300 text-sm hover:shadow-lg
+                     py-2.5 sm:py-3.5 transition-all duration-300 text-sm hover:shadow-lg
                      hover:shadow-[#389844]/20 transform hover:-translate-y-0.5
                      active:translate-y-0 disabled:opacity-50 disabled:cursor-not-allowed
                      disabled:hover:shadow-none disabled:hover:translate-y-0"
