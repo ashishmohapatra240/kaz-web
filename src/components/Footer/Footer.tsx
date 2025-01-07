@@ -16,10 +16,10 @@ const footerSections: FooterSectionType[] = [
     links: [
       { label: "Koraput, Odisha", href: "#" },
       {
-        label: "koraputcamping@gmail.com",
-        href: "mailto:koraputcamping@gmail.com",
+        label: "koraputadventurezone@gmail.com",
+        href: "mailto:koraputadventurezone@gmail.com",
       },
-      { label: "+91 9876543210", href: "tel:+919876543210" },
+      { label: "+91 899903440", href: "tel:+91899903440" },
     ],
   },
   {
