@@ -19,7 +19,7 @@ const footerSections: FooterSectionType[] = [
         label: "koraputadventurezone@gmail.com",
         href: "mailto:koraputadventurezone@gmail.com",
       },
-      { label: "+91 899903440", href: "tel:+91899903440" },
+      { label: "+91 8999003440", href: "tel:+918999003440" },
     ],
   },
   {

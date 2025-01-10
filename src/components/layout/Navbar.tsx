@@ -61,7 +61,7 @@ export const Navbar = () => {
             <div className="flex items-center gap-2 text-white">
               <FaPhone size={20} />
               <span className="font-bold text-sm xl:text-[16px]">
-                899903440
+                8999003440
               </span>
             </div>
             {/* <Button variant="outline" className="text-sm xl:text-[15px]">
@@ -148,7 +148,7 @@ export const Navbar = () => {
             <div className="flex flex-col items-center gap-4 mt-8">
               <div className="flex items-center gap-2 text-white">
                 <FaPhone size={20} />
-                <span className="font-bold">899903440</span>
+                <span className="font-bold">8999003440</span>
               </div>
               {/* <Button variant="outline" className="text-base">
                 Book Now →
